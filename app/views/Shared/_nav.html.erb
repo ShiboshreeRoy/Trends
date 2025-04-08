@@ -1,0 +1,98 @@
+<!-- Navigation Bar -->
+<nav class="bg-white shadow-md">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between py-4">
+      <!-- Logo -->
+      <%= link_to root_path, class: "flex items-center" do %>
+        <i class="fa fa-line-chart text-xl"></i>
+      <% end %>
+
+      <!-- Hamburger Menu (visible on small screens) -->
+      <button class="md:hidden text-black focus:outline-none" id="navbar-toggle">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <!-- Desktop Menu (hidden on small screens, visible on medium and up) -->
+      <div class="hidden md:flex items-center space-x-4" id="desktop-menu">
+        <%= link_to "Home", root_path, class: "text-black text-lg hover:text-gray-700" %>
+
+        <% if user_signed_in? %>
+          <!-- Profile Dropdown -->
+          <div class="relative">
+            <button id="user-menu-button" class="flex items-center space-x-2 text-black hover:text-gray-700 focus:outline-none">
+              <span>Profile</span>
+              <i class="fa fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+              <%= link_to "Profile", user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+              <%= link_to "Settings", edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+              <%= link_to "Sign out", destroy_user_session_path,data:{turbo_method: :delete}, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            </div>
+          </div>
+        <% else %>
+          <%= link_to "Log in", new_user_session_path, class: "bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Mobile Menu (hidden by default, toggled on small screens) -->
+    <div class="md:hidden hidden" id="mobile-menu">
+      <div class="flex flex-col space-y-2 py-4">
+        <%= link_to "Home", root_path, class: "text-black text-lg hover:text-gray-700 px-4 py-2" %>
+        <% if user_signed_in? %>
+          <%= link_to "Profile", user_path(current_user), class: "text-black hover:text-gray-700 px-4 py-2" %>
+          <%= link_to "Settings", edit_user_registration_path, class: "text-black hover:text-gray-700 px-4 py-2" %>
+          <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "text-black hover:text-gray-700 px-4 py-2" %>
+        <% else %>
+          <%= link_to "Log in", new_user_session_path, class: "bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- JavaScript for Interactivity -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Get DOM elements
+  const userMenuButton = document.getElementById('user-menu-button');
+  const userDropdown = document.getElementById('user-dropdown');
+  const navbarToggle = document.getElementById('navbar-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let hideTimeout;
+
+  // Toggle mobile menu
+  if (navbarToggle && mobileMenu) {
+    navbarToggle.addEventListener('click', function () {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+
+  // Show dropdown function
+  function showDropdown() {
+    if (userDropdown) {
+      clearTimeout(hideTimeout);
+      userDropdown.classList.remove('hidden');
+    }
+  }
+
+  // Hide dropdown function with delay
+  function hideDropdown() {
+    if (userDropdown) {
+      hideTimeout = setTimeout(() => {
+        userDropdown.classList.add('hidden');
+      }, 1000);
+    }
+  }
+
+  // Add event listeners for dropdown if elements exist
+  if (userMenuButton) {
+    userMenuButton.addEventListener('mouseenter', showDropdown);
+    userMenuButton.addEventListener('mouseleave', hideDropdown);
+  }
+  if (userDropdown) {
+    userDropdown.addEventListener('mouseenter', showDropdown);
+    userDropdown.addEventListener('mouseleave', hideDropdown);
+  }
+});
+</script>
