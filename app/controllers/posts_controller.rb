@@ -36,6 +36,6 @@ class PostsController < ApplicationController
     private
   
     def post_params
-      params.require(:post).permit(:body,:file,:original_post_id)
+      params.require(:post).permit(:body,:original_post_id, files: [])
     end
   end

@@ -22,17 +22,20 @@
 
     <!-- Post body with some spacing -->
     <p class="text-gray-800 leading-relaxed"><%= @post.body %></p>
-    <div class="file-attachment mt-4">
-        <% post.files.each do |file| %>
-          <% if file.content_type.start_with?('image') %>
-            <%= image_tag file, class: "max-w-full h-auto rounded-lg shadow-md mb-2" %>
-          <% elsif file.content_type.start_with?('video') %>
-            <%= video_tag file, controls: true, class: "max-w-full h-auto rounded-lg shadow-md mb-2" %>
-          <% else %>
-            <%= link_to "Download file", rails_blob_path(file, disposition: "attachment"), class: "text-blue-500 hover:underline" %>
-          <% end %>
-        <% end %>
-      </div>
+
+    <!-- File attachments (image, video, or other files) -->
+   <div class="file-attachment mt-4">
+  <% @post.files.each do |file| %>
+    <% if file.content_type.start_with?('image') %>
+      <%= image_tag url_for(file), class: "max-w-full h-auto rounded-lg shadow-md mb-2" %>
+    <% elsif file.content_type.start_with?('video') %>
+      <%= video_tag url_for(file), controls: true, class: "max-w-full h-auto rounded-lg shadow-md mb-2" %>
+    <% else %>
+      <%= link_to "Download file", rails_blob_path(file, disposition: "attachment"), class: "text-blue-500 hover:underline" %>
+    <% end %>
+  <% end %>
+</div>
+
     <!-- Action buttons (like and repost) with counts, styled like Twitter -->
     <div class="flex space-x-8 mt-5 text-gray-600">
       <div class="flex items-center">
@@ -40,22 +43,21 @@
           <%= button_to post_likes_path(@post), method: :post, class: "bg-transparent border-none p-0 text-gray-500 hover:text-red-500 focus:outline-none", "aria-label": "Like this post" do %>
             <i class="fa fa-heart text-xl" aria-hidden="true"></i>
           <% end %>
-           <span class="ml-2 text-gray-600"><%= @post.likes.count %></span>
-           <% else %>
-            <span class="ml-2 text-gray-600"><i class="fa fa-heart text-red-500"></i><%= @post.likes.count %></span>
+          <span class="ml-2 text-gray-600"><%= @post.likes.count %></span>
+        <% else %>
+          <span class="ml-2 text-gray-600"><i class="fa fa-heart text-red-500"></i><%= @post.likes.count %></span>
         <% end %>
-       
       </div>
+
       <div class="flex items-center">
         <% if current_user %>
           <%= button_to repost_post_path(@post), method: :post, class: "bg-transparent border-none p-0 text-gray-500 hover:text-green-500 focus:outline-none", "aria-label": "Repost this post" do %>
             <i class="fa fa-retweet text-xl text-green-500" aria-hidden="true"></i>
           <% end %>
-           <span class="ml-2 text-gray-600"><%= @post.reposts.count %></span>
-           <% else%>
-            <span class="ml-2 text-gray-600"><i class="fa fa-retweet text-green-500"></i><%= @post.reposts.count %></span>
+          <span class="ml-2 text-gray-600"><%= @post.reposts.count %></span>
+        <% else %>
+          <span class="ml-2 text-gray-600"><i class="fa fa-retweet text-green-500"></i><%= @post.reposts.count %></span>
         <% end %>
-       
       </div>
     </div>
   </div>
