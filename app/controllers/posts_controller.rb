@@ -3,7 +3,12 @@ class PostsController < ApplicationController
     before_action :authenticate_user!, only: [:new, :create, :repost]
   
     def index
+     # @posts = Post.all.order(created_at: :desc)
+     if params[:tag].present?
+      @posts = Post.joins(:tags).where(tags: { name: params[:tag] }).order(created_at: :desc)
+    else
       @posts = Post.all.order(created_at: :desc)
+    end
     end
   
     def show
@@ -16,6 +21,10 @@ class PostsController < ApplicationController
   
     def create
       @post = Post.new(post_params.merge(user: current_user))
+      if params[:post][:tags].present?
+        tag_names = params[:post][:tags].split(',').map(&:strip).uniq
+        @post.tags = tag_names.map { |name| Tag.find_or_create_by(name: name) }
+      end
       if @post.save
         redirect_to @post, notice: 'Post was successfully created.'
       else

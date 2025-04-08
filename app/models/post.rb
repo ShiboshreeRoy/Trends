@@ -5,4 +5,5 @@ class Post < ApplicationRecord
   has_many :likes, dependent: :destroy
   has_many :reposts, class_name: 'Post', foreign_key: 'original_post_id', dependent: :nullify
   has_many_attached :files 
+  has_and_belongs_to_many :tags
 end

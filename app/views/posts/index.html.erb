@@ -28,7 +28,9 @@
 
       <!-- Post body text -->
       <p class="mt-2 text-gray-800"><%= post.body %></p>
-
+      <% Tag.all.each do |tag| %>
+    <%= link_to tag.name, posts_path(tag: tag.name), class: "text-blue-500 hover:underline ml-2" %>
+  <% end %>
       <!-- File attachments (Images, Videos, and other files) -->
       <div class="file-attachment mt-4">
         <% post.files.each do |file| %>
