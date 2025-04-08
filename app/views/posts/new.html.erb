@@ -9,6 +9,14 @@
        <div class="mb-4">
     <%= form.label :tags, "Tags (comma separated)" %>
     <%= form.text_field :tags, class: "w-full p-4 border border-gray-300 rounded-md" %>
+  </div><div class="field">
+    <%= form.label :tags, "Select Tags" %><br />
+    <%= form.collection_check_boxes :tag_ids, Tag.all, :id, :name do |b| %>
+      <div class="inline-block mr-4">
+        <%= b.check_box class: "form-checkbox text-blue-500" %>
+        <%= b.label(class: "text-gray-700") %>
+      </div>
+    <% end %>
   </div>
       <div class="field">
         <%= form.label :files, "Attach Image or Video", class: "block text-sm font-medium text-gray-700" %>

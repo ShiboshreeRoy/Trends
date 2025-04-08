@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users,controllers:{
+    registrations: 'users/registrations'
+}
  # delete '/users/sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
  
   resources :users , only: [:show], constraints: { id: /\d+/ }

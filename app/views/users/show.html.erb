@@ -1,32 +1,81 @@
-<div class="max-w-2xl mx-auto p-4">
-  <h1 class="text-2xl font-bold text-gray-900 mb-4"><%= @user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase) %>'s Posts</h1>
-  
-  <div class="space-y-4">
+<div class="max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-xl">
+  <!-- User Info Section -->
+  <div class="flex items-center mb-8">
+    <div class="flex-shrink-0">
+      <% if @user.avatar.attached? %>
+        <%= image_tag url_for(@user.avatar), class: 'h-16 w-16 rounded-full' %>
+      <% else %>
+        <%= image_tag 'default.png', class: 'h-16 w-16 rounded-full' %>
+      <% end %>
+    </div>
+    <div class="ml-6">
+      <span class="font-semibold text-3xl text-gray-900">
+        <%= @user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase) %>
+      </span>
+      <p class="text-lg text-gray-500">
+        <%= @user.email %>
+      </p>
+    </div>
+  </div>
+
+  <h1 class="text-5xl font-semibold text-gray-900 mb-12 text-center">
+    <%= @user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase) %>'s Posts
+  </h1>
+
+  <div class="space-y-10">
     <% @posts.each do |post| %>
-      <div class="bg-white shadow rounded-lg p-4">
+      <div class="bg-white shadow-xl rounded-2xl p-8 hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+        
+        <!-- Reposted Post Info -->
         <% if post.original_post %>
-          <p class="text-sm text-gray-500 mb-2">
-            Reposted from <%= link_to post.original_post.user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase), post.original_post, class: "text-blue-500 hover:underline" %>
+          <p class="text-sm text-gray-500 mb-4">
+            Reposted from
+            <%= link_to post.original_post.user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase), post.original_post, class: "text-blue-600 hover:text-blue-800 font-medium" %>
           </p>
         <% end %>
-        
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-bold text-gray-900"><%= @user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase) %></span>
-          <span class="text-sm text-gray-500"><%= time_ago_in_words(post.created_at) %> ago</span>
+
+        <div class="flex justify-between items-center mb-8">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <% if post.user.avatar.attached? %>
+                <%= image_tag url_for(post.user.avatar), class: 'h-12 w-12 rounded-full' %>
+              <% else %>
+                <%= image_tag 'default.png', class: 'h-12 w-12 rounded-full' %>
+              <% end %>
+            </div>
+            <div class="ml-4">
+              <span class="font-semibold text-xl text-gray-900">
+                <%= post.user.email.split('@').first.gsub(/\d/, '').sub(/\A\w/, &:upcase) %>
+              </span>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">
+            <%= time_ago_in_words(post.created_at) %> ago
+          </span>
         </div>
-        
-        <p class="text-gray-800 mb-2"><%= post.body %></p>
-        <div class="mt-4">
-  <strong>Tags:</strong>
-  <%= @post.tags.map { |tag| link_to tag.name, tag_path(tag), class: "text-blue-500 hover:underline" }.join(", ").html_safe %>
-</div>
-        <div class="flex space-x-4 text-gray-500 mb-2">
-          <span><i class="fa fa-heart text-red-500 mr-1"></i><%= post.likes.count %></span>
-          <span><i class="fa fa-comment text-blue-500 mr-1"></i><%= post.comments.count %></span>
-          <span><i class="fa fa-retweet text-green-500 mr-1"></i><%= post.reposts.count %></span>
+
+        <p class="text-lg text-gray-800 mb-8 leading-relaxed">
+          <%= post.body %>
+        </p>
+
+        <div class="flex space-x-10 text-gray-600 mb-8">
+          <span class="flex items-center hover:text-red-500 cursor-pointer">
+            <i class="fa fa-heart text-red-500 mr-2"></i>
+            <%= post.likes.count %>
+          </span>
+          <span class="flex items-center hover:text-blue-500 cursor-pointer">
+            <i class="fa fa-comment text-blue-500 mr-2"></i>
+            <%= post.comments.count %>
+          </span>
+          <span class="flex items-center hover:text-green-500 cursor-pointer">
+            <i class="fa fa-retweet text-green-500 mr-2"></i>
+            <%= post.reposts.count %>
+          </span>
         </div>
-        
-        <%= link_to 'View', post_path(post), class: "text-blue-500 hover:underline" %>
+
+        <div class="text-center">
+          <%= link_to 'View Post', post_path(post), class: "text-blue-600 hover:text-blue-800 font-medium text-xl" %>
+        </div>
       </div>
     <% end %>
   </div>
